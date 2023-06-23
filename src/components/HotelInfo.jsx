@@ -1,8 +1,27 @@
-import React from 'react'
-import servicesData from './data/services.json'
-import accessibilityData from './data/accessibility.json'
+import { useState, useEffect } from 'react'
+// import servicesData from './data/services.json'
+// import accessibilityData from './data/accessibility.json'
 
 function HotelInfo() {
+
+  const [servicesData, setServicesData] = useState([])
+  const [accessibilitiesData, setAccessibilitiesData] = useState([])
+
+    const loadData = async() => {
+        const servicesData = await fetch('https://zueuo7ubsa.execute-api.eu-north-1.amazonaws.com/Production/services')
+        let jsonServicesData = await servicesData.json()
+
+        const accessibilitiesData = await fetch('https://zueuo7ubsa.execute-api.eu-north-1.amazonaws.com/Production/accessibility')
+        let jsonAccessibilitiesData = await accessibilitiesData.json()
+
+        setServicesData(jsonServicesData)
+        setAccessibilitiesData(jsonAccessibilitiesData)
+    }
+
+    useEffect(() => {
+        loadData()
+    }, [])  
+
   return (
     <div className="scene" id="hotelinfo">
             <article className="heading">
@@ -25,7 +44,7 @@ function HotelInfo() {
                 <p>Our services and amenities are designed to make your travel easy, your stay comfortable, and your experience one-of-a-kind.</p>
                 <ul>
                     { servicesData.map((item) => (
-                        <li>{ item.text }</li>
+                        <li key={item.name.S}>{ item.name.S }</li>
                     ))}
                 </ul>
               </section>
@@ -33,8 +52,8 @@ function HotelInfo() {
                 <h2>Accessibility</h2>
                 <p>We're committed to maintaining the same quality of service for every individual. We offer the following facilities for those with special needs:</p>
                 <ul>
-                    { accessibilityData.map((item) => (
-                        <li>{ item.text }</li>
+                    { accessibilitiesData.map((item) => (
+                        <li key={item.name.S}>{ item.name.S }</li>
                     ))}
                 </ul>
               </section>
